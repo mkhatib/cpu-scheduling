@@ -29,6 +29,7 @@ class Process
 		this.IO_BurstTime = ioBurstTime;
 		this.CPU_Bursts = cpuBurstsNum;
 		this.IO_Bursts = ioBurstsNum;
+		sequence = new boolean[CPU_Bursts+IO_Bursts];
 	}
 	
 	
@@ -62,23 +63,21 @@ class Process
 	{
 		int cpu = 1;
 		int io = 0;
-		int rand;
 		sequence[0] = true;
-		for( int i = 1; cpu < this.CPU_Bursts ||  io < his.IO_Bursts ; i++) 
+		for( int i = 1; cpu < this.CPU_Bursts ||  io < this.IO_Bursts ; i++) 
 		{
-			rand = (Math.random() / 2) ;
-			if(rand)
+			if(i/2 || (io == this.IO_Bursts) )
 			{
 				sequence[i] = true;
 				cpu++;
+			
 			}
-			else 
+			else
 			{
-				if(sequence[i-1] == false ) // to insure no two IO bursts after each other..
-					sequence[i] = true;
+				sequence[i] = false;
 				io++;
 			}
-		
+			
 		}
 	}
 	

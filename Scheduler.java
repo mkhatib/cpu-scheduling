@@ -15,7 +15,7 @@ public final class Scheduler extends Thread{
      * 
      */
 	public Scheduler(String fileName, Consumer consumer){
-		super(fileName);
+		this(fileName);
 		this.consumer = consumer;
 	}
     public Scheduler(String fileName) throws Exception{

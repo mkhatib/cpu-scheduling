@@ -10,3 +10,14 @@ Multilevel Feedback-Queue Scheduling Algorithm
 		* The method used to determine when to demote (downgrade) a process to a lower priority queue
 		* The method used to determine which queue a process will enter when that process needs service
 		
+		
+		
+1. CPU utilization (what percentage of the time does the CPU spend doing actual work - does not include context switching or when CPU is idle).
+
+a counter starts when bursting,
+
+2. Throughput - How many processes are going through the system per 1000 time units.
+
+
+3. Turnaround time - Average time it takes for a process to enter the system, get executed and exit. (Note that all processes 'enter' the system at time 0, that's when the counter starts. The processes aren't doing anything while not on the ready queue, but their turnaround time still increases.)
+4. Waiting time: Average waiting time - how much time the processor spends on the ready queue waiting to execute (this does not include time the processor spends doing IO). Waiting time starts when the process enters the ready queue (not when it enters the system).

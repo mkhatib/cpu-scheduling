@@ -11,8 +11,13 @@ import java.io.*;
 class ProcessGenerator
 
 {
-
-	public static void generateProcesses(int numOfProcesses){
+	String fileName;
+	// Should provide a more general constructor to set the other parameteres...
+	
+	public ProcessGenerator(String fileName){
+		this.fileName = fileName;
+	}
+	public void generateProcesses(int numOfProcesses){
 		int	pID;			// process ID
 		int CPU_BurstTime;	// CPU burst time 
 		int IO_BurstTime;	// IO burst time 
@@ -34,7 +39,7 @@ class ProcessGenerator
 		
 		try {
 
-		    File file= new File("processes.txt");
+		    File file= new File(fileName);
 		    fos = new FileOutputStream(file);
 		    dos=new DataOutputStream(fos);
 	
@@ -70,5 +75,8 @@ class ProcessGenerator
 		    }
 
 		 
+	}
+	public String getFileName(){
+		return fileName;
 	}
 }

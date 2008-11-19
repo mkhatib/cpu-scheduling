@@ -7,7 +7,7 @@ import java.lang.Math;
 class Process 
 
 {
-	private	int	pID;			// process ID
+	private	int	pid;			// process ID
 	private int CPU_BurstTime;	// CPU burst time 
 	private int IO_BurstTime;	// IO burst time 
 	private int	CPU_Bursts;		// number of CPU bursts
@@ -18,15 +18,25 @@ class Process
 	Process constructor
 	**/
 	public Process(){
-		this.CPU_BurstTime = 0;
-		this.IO_BurstTime = 0;
-		this.CPU_Bursts = 0;
-		this.IO_Bursts = 0;
-		this.arrivalTime = 0;
-	
+		this(0,0,0,0);
+	}
+	public Process(int cpuBurstsNum, int cpuBurstTime, int ioBurstsNum, int ioBurstTime){
+		this.CPU_BurstTime = cpuBurstTime;
+		this.IO_BurstTime = ioBurstTime;
+		this.CPU_Bursts = cpuBurstsNum;
+		this.IO_Bursts = ioBurstsNum;
 	}
 	
 	
+	public int getTotalCPUTime()
+	{
+		return CPU_BurstTime*CPU_Bursts;
+	}
+	
+	public String toString(){
+		return "" + getTotalCPUTime();
+	}
+	/*
 	public void setCPU_BurstTime(int max, int min)	{
 		this.CPU_BurstTime=(int) (Math.random() * (max - min + 1) ) + min;
 		System.out.println("Random CPU : " + this.CPU_BurstTime);
@@ -59,4 +69,5 @@ class Process
 		}
 	
 	}
+	*/
 }

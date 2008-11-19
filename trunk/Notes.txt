@@ -1,0 +1,12 @@
+Multilevel Feedback-Queue Scheduling Algorithm
+	- Allows processes to move between queues
+	- According CPU bursts 
+	- If CPU Use too much CPU time it's moved to a lower priority queue
+	- A Process that waits too long in lower priority queue may moves to higher priority queue
+	- Parameters
+		* Number of Queues
+		* Scheduling Algorithm for each queue
+		* The method used to determine when to upgrade a process to a higher priority queue
+		* The method used to determine when to demote (downgrade) a process to a lower priority queue
+		* The method used to determine which queue a process will enter when that process needs service
+		

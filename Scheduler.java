@@ -7,12 +7,17 @@ import java.util.*;
  * @author Mohammad Khatib &lt;&gt;
  * @version $Rev$
  */
-public final class Scheduler {
+public final class Scheduler extends Thread{
     private ArrayList<Process> processes = new ArrayList<Process>();
+	private Consumer consumer;
 	// {{{ Scheduler constructor
     /**
      * 
      */
+	public Scheduler(String fileName, Consumer consumer){
+		super(fileName);
+		this.consumer = consumer;
+	}
     public Scheduler(String fileName) throws Exception{
         BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
 		String pline;
@@ -48,6 +53,16 @@ public final class Scheduler {
 	{
 		for(int i=0;i<processes.size(); i++){
 			System.out.println(processes.get(i));
+		}
+	}
+	
+	public void run(){
+		// inserts processes into Ready Queue
+		while(processes.size() != 0)
+	 	{	
+			// insertProcess Must Block if the Ready Queue is full (20 processes)
+			consumer.insertProcess(processes.get(0));
+		 	processes.remove(0);
 		}
 	}
 	

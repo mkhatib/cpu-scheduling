@@ -1,5 +1,5 @@
 //package .Users.mkhatib.Documents.os.cpu-scheduling;
-import java.util.concurrent;
+import java.util.concurrent.*;
 /**
  * <<Class summary>>
  *
@@ -28,15 +28,32 @@ public final class MLFQueue {
 	public void add(Object o){
 		((RRQueue)queues[0]).add(o);
 	}
+	
 	public void add(int queueNum, Object o){
-		
+		if(queueNum == 2)
+			((ConcurrentLinkedQueue)queues[queueNum]).add(o);
+		else 
+			((RRQueue)queues[queueNum]).add(o);
 	}
+	
 	public int getNumOfElements(){
 		return (((RRQueue)queues[0]).getSize() + ((RRQueue)queues[1]).getSize() + ((ConcurrentLinkedQueue)queues[2]).size());
 	}
+	// Queue 0 processes will return first 
+	// If Queue 0 doesn't contain processes, Queue 1 processes will return
+	// If Queue 1 also doesn't contain processes, Queue 2 processes will return
+	// Else it will return null
 	public Object poll(){
 		if(((RRQueue)queues[0]).getSize() != 0){
 			return ((RRQueue)queues[0]).poll();
 		}
+		else if(((RRQueue)queues[1]).getSize() != 0){
+			return ((RRQueue)queues[1]).poll();
+		}
+		else if(((ConcurrentLinkedQueue)queues[2]).size() != 0){
+			return ((ConcurrentLinkedQueue)queues[2]).poll();
+		}
+		return null;
 	}
+	
 }

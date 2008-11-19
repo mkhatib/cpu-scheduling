@@ -12,18 +12,18 @@ public final class Supplier extends Thread{
     private ArrayList<Process> processes = new ArrayList<Process>();
 	private Consumer consumer;
 	//private Condition processFinished;
-	// {{{ Scheduler constructor
+	// {{{ Supplier constructor
     /**
      * 
      */
-	//public Scheduler(String fileName, Consumer)
-	public Scheduler(String fileName, Consumer consumer) throws Exception{
+	//public Supplier(String fileName, Consumer)
+	public Supplier(String fileName, Consumer consumer) throws Exception{
 		this(fileName);
 		this.consumer = consumer;
 		// Get the condition that will signal the insert method when there's enough space in the queue
 		//this.processFinished = consumer.getProcessFinishCondition();
 	}
-    public Scheduler(String fileName) throws Exception{
+    public Supplier(String fileName) throws Exception{
         BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
 		String pline;
 		while((pline = br.readLine()) != null)

@@ -11,7 +11,24 @@ Multilevel Feedback-Queue Scheduling Algorithm
 		* The method used to determine which queue a process will enter when that process needs service
 		
 		
-		
+1.	a process is selected by the scheduler to be ran by the system.
+2.	The process begins to be processed within its burst in the first RR queue.
+3.	The other 19 process are waiting by the quantum period if the prev process burst < quantum, else it will be equal to the burst
+	As long as the mlfQ is full -> schedule wait
+4.	if quantum finished and the burst of process isn't yet finished, push down to RR queue2.
+	else P1 fishished , it is out, scheduler is signaled , a new process is enetered to the queue,
+	and the first waiting one is given a quantum to work.
+5.	repeat until RR queue  is empty is some time
+
+
+5.	in the case that P1 not yet finished , it is processed with the new quantum 
+			if remainder burst < new quantum
+				when finished, pushed down to last queue
+			else
+			
+			it is out, schedule is signaled.. new process entered...
+6. 		
+	
 1. CPU utilization (what percentage of the time does the CPU spend doing actual work - does not include context switching or when CPU is idle).
 
 a counter starts when bursting,

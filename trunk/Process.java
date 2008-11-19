@@ -12,7 +12,11 @@ class Process
 	private int IO_BurstTime;	// IO burst time 
 	private int	CPU_Bursts;		// number of CPU bursts
 	private int	IO_Bursts;		// number of I/O bursts
-	
+	private int finishTime;
+	private int	leftTime;
+	private int	turnAroundTime;	// will be incremented with the clock , and stopped when the process finishes
+	private boolean sequence [];
+
 	
 	/** 
 	Process constructor
@@ -36,6 +40,48 @@ class Process
 	public String toString(){
 		return "" + getTotalCPUTime();
 	}
+	
+	public int getRemainingTime()
+	{
+		return leftTime;
+	}
+	public void servedOneClock() 
+	{ 
+		TimeLeft--;
+	}
+	
+	public void finishedAt(int t) 
+	{
+      finishTime=t;
+     // Tq = FinishTime-ArrivalTime;
+     // Tqs = Math.round (Tq / ServiceTime);
+	} 
+	
+	
+	public void generateSequence() 
+	{
+		int cpu = 1;
+		int io = 0;
+		int rand;
+		sequence[0] = true;
+		for( int i = 1; cpu < this.CPU_Bursts ||  io < his.IO_Bursts ; i++) 
+		{
+			rand = (Math.random() / 2) ;
+			if(rand)
+			{
+				sequence[i] = true;
+				cpu++;
+			}
+			else 
+			{
+				if(sequence[i-1] == false ) // to insure no two IO bursts after each other..
+					sequence[i] = true;
+				io++;
+			}
+		
+		}
+	}
+	
 	/*
 	public void setCPU_BurstTime(int max, int min)	{
 		this.CPU_BurstTime=(int) (Math.random() * (max - min + 1) ) + min;

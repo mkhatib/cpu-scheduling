@@ -11,12 +11,11 @@ public final class Supplier extends Thread{
 
     private ArrayList<Process> processes = new ArrayList<Process>();
 	private Consumer consumer;
-	//private Condition processFinished;
+	
 	// {{{ Supplier constructor
     /**
      * 
      */
-	//public Supplier(String fileName, Consumer)
 	public Supplier(String fileName, Consumer consumer) throws Exception{
 		this(fileName);
 		this.consumer = consumer;
@@ -28,28 +27,25 @@ public final class Supplier extends Thread{
 		String pline;
 		while((pline = br.readLine()) != null)
 		{
-			//System.out.println(pline);
 			String[] params = pline.split(" ");
-			int cpuBurstsNum = Integer.parseInt(params[0]);
-			int cpuBurstTime = Integer.parseInt(params[1]);
-			int ioBurstsNum = Integer.parseInt(params[2]);
-			int ioBurstTime = Integer.parseInt(params[3]);
-			
-			// Should we sort them on the Number of CPU Bursts 
-			// Or The CPU Burst Time 
-			// Or the Total CPU Time it will need the CPU 
-			// Which is equal to CPUBurstTime * NumOfCPUBursts
+			int pid = Integer.parseInt(params[0]);
+			int cpuBurstsNum = Integer.parseInt(params[1]);
+			int cpuBurstTime = Integer.parseInt(params[2]);
+			int ioBurstsNum = Integer.parseInt(params[3]);
+			int ioBurstTime = Integer.parseInt(params[4]);
+			// Should we sort them on the Number of CPU Bursts Or The CPU Burst Time 
+			// Or the Total CPU Time it will need the CPU Which is equal to CPUBurstTime * NumOfCPUBursts
+			/*
 			int i;
 			for(i=0;i<processes.size(); i++)
-			{
-				if(cpuBurstsNum*cpuBurstTime < processes.get(i).getTotalCPUTime()){
+				if(cpuBurstsNum*cpuBurstTime < processes.get(i).getTotalCPUTime())
 					break;
-				}
-			}
-			processes.add(i,new Process(cpuBurstsNum,cpuBurstTime, ioBurstsNum, ioBurstTime));
+			*/
+			processes.add(/*i,*/new Process(pid,cpuBurstsNum,cpuBurstTime, ioBurstsNum, ioBurstTime));
 		}
     }
 	// }}}
+	
 	public int getNumberOfProcesses(){
 		return processes.size();
 	}
@@ -75,7 +71,7 @@ public final class Supplier extends Thread{
 	
 	static public void main(String[] args) throws Exception
 	{
-		Scheduler s = new Scheduler("processes.txt");
+		Supplier s = new Supplier("processes.txt");
 		
 		//System.out.println(s.getNumberOfProcesses());
 		s.printAllProcesses();

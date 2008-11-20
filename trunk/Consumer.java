@@ -1,6 +1,7 @@
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 import java.util.*;
+import javax.swing.*;
 public final class Consumer extends Scheduler implements Runnable{
 	
 	private int numOfProcesses;
@@ -8,16 +9,30 @@ public final class Consumer extends Scheduler implements Runnable{
 	private int contextSwitchingClocks;
 	private int throughputTime=1000;
 	private double throughput=0;
-
+	private boolean allFinished = false;
+	private double cpuUtilization=0;
+	private double waitingTime=0;
+	private double turnAroundTime=0;
 	private ArrayList<Integer> numOfProcessesIn1000 = new ArrayList<Integer>();
 	private ArrayList<Process> ioQueue = new ArrayList<Process>();
-	public Consumer(int numOfProcesses){
+	
+	public Consumer(int quantum0, int quantum1, int context, int degree, int numOfProcesses,JTextArea resultTextArea){
+		this(quantum0,quantum1,context,degree,numOfProcesses);
+		this.resultTextArea = resultTextArea;
+	}
+	
+	public Consumer(int quantum0, int quantum1, int context, int degree, int numOfProcesses){
+		super(quantum0,quantum1,context,degree);
 		this.numOfProcesses = numOfProcesses;
-		//thread = new Thread(this);
-		//thread.start();
+		
+	}
+	public Consumer(int numOfProcesses){
+		this(8,16,2,20,numOfProcesses);	
 	}
 
-	
+	public boolean isFinished(){
+		return allFinished;
+	}
 	
 	
 	
@@ -25,12 +40,14 @@ public final class Consumer extends Scheduler implements Runnable{
 		int processesIn1000=0, n=0;
       	boolean preempted = false, finished=false, finishedBurst=false;
 		int processedClocks=0;
+		System.out.println("NumOfProcesses: " + numOfProcesses);
 		
       	while (doneQueue.size() < numOfProcesses) {
          	clock++;
 			performIO();
 			P = getProcess();
 			if (P == null) {
+				resultTextArea.append("CPU Is Idle at "+ clock +"\n" );
 				cpuIdleTime++;
 				continue;
 			}
@@ -40,11 +57,8 @@ public final class Consumer extends Scheduler implements Runnable{
 			P.servedOneClock();
 			
 			if(P.getFlag() == 1)
-				P.setItsWait(clock,1); // 1 for first burst
+				P.setItsWait(clock); // 1 for first burst
 
-			else
-				P.setItsWait(clock,0); //  0 for  not first burst
-			
 			
         	processedClocks++;
 			throuputHelper();
@@ -225,6 +239,10 @@ public final class Consumer extends Scheduler implements Runnable{
 			sum += numOfProcessesIn1000.get(i);
 		throughput = (sum*1.0)/(numOfProcessesIn1000.size());
 		// Only Context Switching, When the CPU is Idle?
+		cpuUtilization = (calculateTotalCPUWork()/(clock*1.0))*100;
+		turnAroundTime = calculateAvgTurnAroundTime();
+		waitingTime = calculateAvgWaitingTime();
+		
 		System.out.println("Idle Time = (" + (contextSwitchingClocks+cpuIdleTime) + ") Out of total (" + clock +  ") time Unit" );
 		// CPU Utilization = clock/(All Processes Time)
 		//System.out.println("CPU Utilization: " + (1-((contextSwitchingClocks+cpuIdleTime)/(clock*1.0)))*100 + "%");
@@ -235,7 +253,7 @@ public final class Consumer extends Scheduler implements Runnable{
 
 		System.out.println("CPU Idle Time: " + cpuIdleTime);
 		
-		
+		allFinished = true;
 	}
 	
 	private void throuputHelper(){
@@ -261,12 +279,27 @@ public final class Consumer extends Scheduler implements Runnable{
 			if(p.getIOBurstLeftTime() <= 0){
 				p.servedOneIOBurst();
 				System.out.println("IO Bursts Left: " + p.getIOBurstsLeft());
-				
+				resultTextArea.append("Process " +p.getPID() + " is performing IO at " + clock + "\n");
 				ioQueue.remove(i);
 				readyQueue.add(p);
 			}
 		}
 		
+	}
+
+	public double getCpuUtilization(){
+		return cpuUtilization;
+	}
+	
+	public double getThroughput(){
+		return throughput;
+	}
+	
+	public double getTurnAroundTime(){
+		return turnAroundTime;
+	}
+	public double getWaitingTime(){
+		return waitingTime;
 	}
 	
 	public int calculateTotalCPUWork() {
@@ -307,16 +340,15 @@ public final class Consumer extends Scheduler implements Runnable{
 	public int calculateAvgWaitingTime() {
 	
 		Process p = null;
-		int wainting =0;
+		int waiting =0;
 		for(int i = 0; i < doneQueue.size() ; i++) 
 		{
 			p = doneQueue.get(i);
-			wainting += p.getItsWait();
+			waiting += p.getItsWait();
 		}
-		return (wainting/numOfProcesses);
+		return (waiting/numOfProcesses);
 	
 	}
 	
 }
-
 

@@ -9,22 +9,26 @@ import java.util.*;
  */
 public final class MLFQueue {
     
-	private final int MAX_NUM_OF_PROCESSES = 20;
-	private int queue1Quantum = 8, queue2Quantum = 16;
+	private  int MAX_NUM_OF_PROCESSES = 20;
+	private int queue1Quantum = 8, queue2Quantum = 16, contextSwitchTime=2;
 	
 	private int lastProcessQueue;
-	private Object[] queues = {
-		new RRQueue(8,2),
-		new RRQueue(16,2),
-		//new ConcurrentLinkedQueue()
-		new ArrayList()
-	};
+	private Object[] queues = new Object[3]; 
 	// {{{ MLFQueue constructor
     /**
      * 
      */
+	public MLFQueue(int q0,int q1, int ctxt, int dgr){
+		queue1Quantum = q0;
+		queue2Quantum = q1;
+		contextSwitchTime = ctxt;
+		MAX_NUM_OF_PROCESSES = dgr;
+		queues[0] = new RRQueue(queue1Quantum,contextSwitchTime);
+		queues[1] = new RRQueue(queue2Quantum,contextSwitchTime);
+		queues[2] = new ArrayList();
+	}
     public MLFQueue() {
-        
+		this(8,16,2,20);
     }
 	// }}}
 	

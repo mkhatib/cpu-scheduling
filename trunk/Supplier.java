@@ -69,12 +69,5 @@ public final class Supplier extends Thread{
 		}
 	}
 	
-	static public void main(String[] args) throws Exception
-	{
-		Supplier s = new Supplier("processes.txt");
-		
-		//System.out.println(s.getNumberOfProcesses());
-		s.printAllProcesses();
-	}
     
 }

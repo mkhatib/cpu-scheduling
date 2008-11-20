@@ -12,6 +12,8 @@ class ProcessGenerator
 
 {
 	String fileName;
+	private int inputCPUBursts=75,inputIOBursts=25;
+	private int ct_min = 5, ct_max = 50, iot_min = 500, iot_max = 1000;
 	// Should provide a more general constructor to set the other parameteres...
 	
 	public ProcessGenerator(String fileName){
@@ -23,18 +25,10 @@ class ProcessGenerator
 		int IO_BurstTime;	// IO burst time 
 		int	CPU_Bursts;		// number of CPU bursts
 		int	IO_Bursts;		// number of I/O bursts
-        int ct_min = 5;
-        int ct_max = 50;
-		int iot_min = 500;
-        int iot_max = 1000;
-		int cb_max = 100;
-		int cb_min = 50;
-		int iob_max = 50;
-		int iob_min = 0;
 		FileOutputStream fos; 
 		DataOutputStream dos;
-		double segma_cpu =  Math.sqrt( 1/( 2*Math.PI*75*75 ) );// 0.005;//0.005321; 1/ (  2*Math.PI*75*75 )
-		double segma_io = Math.sqrt( 1/( 2*Math.PI*25*25 ) );
+		double segma_cpu =  Math.sqrt( 1/( 2*Math.PI*inputCPUBursts*inputCPUBursts ) );// 0.005;//0.005321; 1/ (  2*Math.PI*75*75 )
+		double segma_io = Math.sqrt( 1/( 2*Math.PI*inputIOBursts*inputIOBursts ) );
 		int mean = 0;//numOfProcesses/2;
 		
 		try {

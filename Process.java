@@ -111,23 +111,29 @@ class Process
      // Tqs = Math.round (Tq / ServiceTime);
 	} 
 	
+	public int getPID(){
+		return pid;
+	}
 	public void setArrivalTime(int t)
 	{
 		arrivalTime =t;
-		flag = 0 ; // to indicate the first burst has already arrived.
+		flag = 1; // to indicate the first burst has already arrived.
 	}
-	
+
 	public void setTempArrivalTime(int t)
 	{
 		tempArrivalTime =t;
 	}
 	
-	public void setItsWait(int clock,int flag)
+	public void setItsWait(int clock)
 	{
 		if(flag == 1)
-			waitingTime += (clock - arrivalTime);
-		else // the other bursts
-			waitingTime += (clock - tempArrivalTime);
+		{
+			waitingTime = (clock - arrivalTime);
+			flag = 0;
+		}	
+		//else // the other bursts
+			//waitingTime += (clock - tempArrivalTime);
 	}
 	
 	int getFlag() 

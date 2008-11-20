@@ -63,8 +63,8 @@ public class Scheduler extends Object{
 		Process p=null;
 		try {
 			// If there's no space in the system this method have to wait until it is be signaled
-			while(readyQueue.getNumOfElements() <= 0)
-				processAvailable.await();
+			//while(readyQueue.getNumOfElements() <= 0)
+			//	processAvailable.await();
 			p = (Process)readyQueue.poll(); // Get Best Process
 		}
 		catch(Exception ex){

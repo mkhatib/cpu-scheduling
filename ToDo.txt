@@ -1,0 +1,4 @@
+To Do:
+	- Adding Progress Bar so the user can see where the simulation process in.
+	- Adding A Visual Diagrams on What the processes in the IO and Ready queues are doing! 
+	- Adding a light Indicating whether the CPU is idle or not

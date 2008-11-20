@@ -59,7 +59,9 @@ public final class MLFQueue {
 		}
 		else if(((/*ConcurrentLinkedQueue*/ArrayList)queues[2]).size() != 0){
 			lastProcessQueue = 2;
-			return ((/*ConcurrentLinkedQueue*/ArrayList)queues[2]).get(0);
+			Process p = (Process)((ArrayList)queues[2]).get(0);
+			((ArrayList)queues[2]).remove(0);
+			return p;
 		}
 		return null;
 	}

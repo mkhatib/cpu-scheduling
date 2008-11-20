@@ -7,6 +7,7 @@ import java.lang.Math;
 class Process 
 
 {
+	public static final boolean CPU_BURST=true, IO_BURST=false;
 	private	int	pid;			// process ID
 	private int CPU_BurstTime;	// CPU burst time 
 	private int IO_BurstTime;	// IO burst time 
@@ -14,7 +15,12 @@ class Process
 	private int	IO_Bursts;		// number of I/O bursts
 	private int finishTime;
 	private int	leftTime;
+	private int burstLeftTime;
+	private int ioBurstLeftTime;
+	private int ioLeftBursts;
+	private int leftBursts;
 	private int	turnAroundTime;	// will be incremented with the clock , and stopped when the process finishes
+	private int burstIndex=0;
 	private boolean sequence [];
 
 	
@@ -30,8 +36,14 @@ class Process
 		this.IO_BurstTime = ioBurstTime;
 		this.CPU_Bursts = cpuBurstsNum;
 		this.IO_Bursts = ioBurstsNum;
+		burstLeftTime = CPU_BurstTime;
+		ioBurstLeftTime = IO_BurstTime;
+		leftBursts = CPU_Bursts;
+		ioLeftBursts = IO_Bursts;
 		leftTime = getTotalCPUTime();
 		sequence = new boolean[CPU_Bursts+IO_Bursts];
+		generateSequence();
+		//printSequence();
 	}
 	
 	
@@ -40,6 +52,25 @@ class Process
 		return CPU_BurstTime*CPU_Bursts;
 	}
 	
+	public int getBurstLeftTime(){
+		return burstLeftTime;
+	}
+	
+	
+	
+	
+	public int getLeftBursts(){
+		return leftBursts;
+	}
+	public int getIOBurstLeftTime(){
+		return ioBurstLeftTime;
+	}
+	public void servedOneIOClock(){
+		ioBurstLeftTime--;
+	}
+	public int getIOBurstsLeft(){
+		return ioLeftBursts;
+	}
 	public String toString(){
 		return (pid + " - " +getTotalCPUTime());
 	}
@@ -51,8 +82,23 @@ class Process
 	public void servedOneClock() 
 	{ 
 		leftTime--;
+		burstLeftTime--;
 	}
 	
+	public void servedOneIOBurst(){
+		ioLeftBursts--;
+		ioBurstLeftTime = IO_BurstTime;
+		burstIndex++;
+	}
+	public void servedOneBurst(){
+		leftBursts--;
+		burstLeftTime = CPU_BurstTime;
+		burstIndex++;
+	}
+	
+	public boolean getBurstType(){
+		return sequence[burstIndex-1];
+	}
 	public void finishedAt(int t) 
 	{
       finishTime=t;
@@ -82,6 +128,21 @@ class Process
 		}
 	}
 	
+	public int getTotalBursts(){
+		return sequence.length;
+	}
+	
+	public int getBurstIndex(){
+		return burstIndex;
+	}
+	
+	public void printSequence(){
+		System.out.print("[" );
+		for(int i=0;i<sequence.length-1; i++){
+			System.out.print(sequence[i] + ",");
+		}
+		System.out.println(sequence[sequence.length-1] + "]");
+	}
 	/*
 	public void setCPU_BurstTime(int max, int min)	{
 		this.CPU_BurstTime=(int) (Math.random() * (max - min + 1) ) + min;

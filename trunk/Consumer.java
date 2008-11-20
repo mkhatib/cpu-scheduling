@@ -38,6 +38,14 @@ public final class Consumer extends Scheduler implements Runnable{
 			int queueNumber = readyQueue.getLastProcessQueue();
         	idle = false; // Start Processing
 			P.servedOneClock();
+			
+			if(P.getFlag() == 1)
+				P.setItsWait(clock,1); // 1 for first burst
+
+			else
+				P.setItsWait(clock,0); //  0 for  not first burst
+			
+			
         	processedClocks++;
 			throuputHelper();
 			if(readyQueue.getLastProcessQueue() == 0){
@@ -133,6 +141,8 @@ public final class Consumer extends Scheduler implements Runnable{
 						//P.servedOneBurst();
 						if(P.getBurstType() == Process.CPU_BURST){
 							readyQueue.add(P);
+							P.setTempArrivalTime(clock);
+							
 							contextSwitchingClocks += 2;
 							clock++;
 							throuputHelper();
@@ -217,10 +227,12 @@ public final class Consumer extends Scheduler implements Runnable{
 		// Only Context Switching, When the CPU is Idle?
 		System.out.println("Idle Time = (" + (contextSwitchingClocks+cpuIdleTime) + ") Out of total (" + clock +  ") time Unit" );
 		// CPU Utilization = clock/(All Processes Time)
-		System.out.println("CPU Utilization: " + (((contextSwitchingClocks+cpuIdleTime)/(clock*1.0)))*100 + "%");
-		
+		//System.out.println("CPU Utilization: " + (1-((contextSwitchingClocks+cpuIdleTime)/(clock*1.0)))*100 + "%");
+		System.out.println("CPU Utilization: " + (( calculateTotalCPUWork() )/(clock*1.0))*100 + "%");
 		System.out.println("Throughput = " + throughput + " Procesess Per 1000 Time Unit");
-		
+		System.out.println("Average Turn Around Time = " + calculateAvgTurnAroundTime() );
+		System.out.println("Average Waiting Time = " + calculateAvgWaitingTime() );
+
 		System.out.println("CPU Idle Time: " + cpuIdleTime);
 		
 		
@@ -256,4 +268,55 @@ public final class Consumer extends Scheduler implements Runnable{
 		}
 		
 	}
+	
+	public int calculateTotalCPUWork() {
+	
+		Process p = null;
+		int totalTime =0;
+		for(int i = 0; i < doneQueue.size() ; i++) 
+		{
+			p = doneQueue.get(i);
+			totalTime += p.getTotalCPUTime();
+		}
+		return totalTime;
+	}
+	
+	public int calculateAvgTurnAroundTime() {
+	
+		Process p = null;
+		int avgTAT =0;
+		for(int i = 0; i < doneQueue.size() ; i++) 
+		{
+			p = doneQueue.get(i);
+			avgTAT += p.getTurnAroundTime();
+		}
+		return (avgTAT/numOfProcesses);
+	}
+	
+	/* public int calculateWaitingTime() {
+		Process p = null;
+		int wainting =0;
+		for(int i = 0; i < doneQueue.size() ; i++) 
+		{
+			p = doneQueue.get(i);
+			wainting += ( p.getTurnAroundTime() - p.getArrivalTime() );
+		}
+		return (wainting/numOfProcesses);
+	} */
+	
+	public int calculateAvgWaitingTime() {
+	
+		Process p = null;
+		int wainting =0;
+		for(int i = 0; i < doneQueue.size() ; i++) 
+		{
+			p = doneQueue.get(i);
+			wainting += p.getItsWait();
+		}
+		return (wainting/numOfProcesses);
+	
+	}
+	
 }
+
+

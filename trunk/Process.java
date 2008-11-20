@@ -19,8 +19,11 @@ class Process
 	private int ioBurstLeftTime;
 	private int ioLeftBursts;
 	private int leftBursts;
-	private int	turnAroundTime;	// will be incremented with the clock , and stopped when the process finishes
 	private int burstIndex=0;
+	private int arrivalTime;
+	private int tempArrivalTime;
+	private int waitingTime;
+	private int flag;
 	private boolean sequence [];
 
 	
@@ -43,6 +46,8 @@ class Process
 		leftTime = getTotalCPUTime();
 		sequence = new boolean[CPU_Bursts+IO_Bursts];
 		generateSequence();
+		waitingTime = 0;
+		flag = 1;
 		//printSequence();
 	}
 	
@@ -106,6 +111,40 @@ class Process
      // Tqs = Math.round (Tq / ServiceTime);
 	} 
 	
+	public void setArrivalTime(int t)
+	{
+		arrivalTime =t;
+		flag = 0 ; // to indicate the first burst has already arrived.
+	}
+	
+	public void setTempArrivalTime(int t)
+	{
+		tempArrivalTime =t;
+	}
+	
+	public void setItsWait(int clock,int flag)
+	{
+		if(flag == 1)
+			waitingTime += (clock - arrivalTime);
+		else // the other bursts
+			waitingTime += (clock - tempArrivalTime);
+	}
+	
+	int getFlag() 
+	{
+		return flag;
+	}
+	
+	public int getItsWait()
+	{
+		return waitingTime;
+	}
+	
+	
+	public int getArrivalTime()
+	{
+		return arrivalTime;
+	}
 	
 	public void generateSequence() 
 	{
@@ -134,6 +173,10 @@ class Process
 	
 	public int getBurstIndex(){
 		return burstIndex;
+	}
+	
+	public int getTurnAroundTime() {
+		return finishTime;
 	}
 	
 	public void printSequence(){

@@ -39,7 +39,7 @@ public final class Consumer extends Scheduler implements Runnable{
         	idle = false; // Start Processing
 			P.servedOneClock();
         	processedClocks++;
-			// throuputHelper();
+			throuputHelper();
 			if(readyQueue.getLastProcessQueue() == 0){
 				while(processedClocks < readyQueue.getQueue1Quantum() )
 				{
@@ -61,11 +61,11 @@ public final class Consumer extends Scheduler implements Runnable{
 						readyQueue.add(P,1);
 						contextSwitchingClocks += 2;
 						clock++;
-						//throuputHelper();
+						throuputHelper();
 						clock++;
 						performIO();
 						performIO();
-						//throuputHelper();
+						throuputHelper();
 					}
 					else{
 						//P.servedOneBurst();
@@ -77,8 +77,10 @@ public final class Consumer extends Scheduler implements Runnable{
 							readyQueue.add(P);
 							contextSwitchingClocks += 2;
 							clock++;
+							throuputHelper();
 							performIO();
 							clock++;
+							throuputHelper();
 						}
 						else //if(P.nextBurst() == Process.IO_BURST)
 						{
@@ -106,6 +108,7 @@ public final class Consumer extends Scheduler implements Runnable{
 					}
 					processedClocks++;
 					clock++;
+					throuputHelper();
 					performIO();
 					throuputHelper();
 					P.servedOneClock();
@@ -115,8 +118,10 @@ public final class Consumer extends Scheduler implements Runnable{
 						readyQueue.add(P,2);
 						contextSwitchingClocks += 2;
 						clock++;
+						throuputHelper();
 						//throuputHelper();
 						clock++;
+						throuputHelper();
 						performIO();
 						performIO();
 						//throuputHelper();
@@ -130,8 +135,10 @@ public final class Consumer extends Scheduler implements Runnable{
 							readyQueue.add(P);
 							contextSwitchingClocks += 2;
 							clock++;
+							throuputHelper();
 							performIO();
 							clock++;
+							throuputHelper();
 						}
 						else //if(P.nextBurst() == Process.IO_BURST)
 						{
@@ -155,6 +162,7 @@ public final class Consumer extends Scheduler implements Runnable{
 				{
 					processedClocks++;
 					clock++;
+					throuputHelper();
 					performIO();
 					throuputHelper();
 					P.servedOneClock();
@@ -171,7 +179,9 @@ public final class Consumer extends Scheduler implements Runnable{
 						readyQueue.add(P);
 						performIO();
 						clock++;
+						throuputHelper();
 						clock++;
+						throuputHelper();
 						contextSwitchingClocks += 2;
 					}
 					else //if(P.nextBurst() == Process.IO_BURST)
@@ -206,7 +216,9 @@ public final class Consumer extends Scheduler implements Runnable{
 		throughput = (sum*1.0)/(numOfProcessesIn1000.size());
 		// Only Context Switching, When the CPU is Idle?
 		System.out.println("Idle Time = (" + (contextSwitchingClocks+cpuIdleTime) + ") Out of total (" + clock +  ") time Unit" );
-		//System.out.println("CPU Utilization: " + (clock/(contextSwitchingClocks*1.0))*100 + "%");
+		// CPU Utilization = clock/(All Processes Time)
+		System.out.println("CPU Utilization: " + (((contextSwitchingClocks+cpuIdleTime)/(clock*1.0)))*100 + "%");
+		
 		System.out.println("Throughput = " + throughput + " Procesess Per 1000 Time Unit");
 		
 		System.out.println("CPU Idle Time: " + cpuIdleTime);

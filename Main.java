@@ -268,6 +268,7 @@ class Main extends JFrame implements ActionListener{
 		JOptionPane.showMessageDialog(this, num + " Processes has been generated and been saved to '" + name + "' File", "Done!", JOptionPane.INFORMATION_MESSAGE);
 	}
 	private void simulate(){
+		resultTextArea.setText("");
 		String processesFile = openFileNameField.getText();
 		String line;
 		int lineCount = 0;

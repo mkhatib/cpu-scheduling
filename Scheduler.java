@@ -52,6 +52,7 @@ public class Scheduler extends Object{
 				spaceAvailable.await();
 			readyQueue.add(process); // add new process to first RRqueue
 			resultTextArea.append("Process " +process.getPID() + " has entered the ready queue at " + clock + "\n");
+			resultTextArea.setCaretPosition(resultTextArea.getText().length());
 			process.setArrivalTime(clock); 
 			processAvailable.signalAll();
 			//System.out.println("InsertProcess");
@@ -102,6 +103,7 @@ public class Scheduler extends Object{
 		try{
 			//readyQueue.removeFromFCFS(p);
 			resultTextArea.append("Process " +p.getPID() + " has finished at " + clock + "\n");
+			resultTextArea.setCaretPosition(resultTextArea.getText().length());
 			spaceAvailable.signalAll();
 		}
 		catch(Exception ex){

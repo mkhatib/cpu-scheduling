@@ -22,13 +22,15 @@ class Process
 	Process constructor
 	**/
 	public Process(){
-		this(0,0,0,0);
+		this(0,0,0,0,0);
 	}
-	public Process(int cpuBurstsNum, int cpuBurstTime, int ioBurstsNum, int ioBurstTime){
+	public Process(int pid,int cpuBurstsNum, int cpuBurstTime, int ioBurstsNum, int ioBurstTime){
+		this.pid = pid;
 		this.CPU_BurstTime = cpuBurstTime;
 		this.IO_BurstTime = ioBurstTime;
 		this.CPU_Bursts = cpuBurstsNum;
 		this.IO_Bursts = ioBurstsNum;
+		leftTime = getTotalCPUTime();
 		sequence = new boolean[CPU_Bursts+IO_Bursts];
 	}
 	
@@ -39,7 +41,7 @@ class Process
 	}
 	
 	public String toString(){
-		return "" + getTotalCPUTime();
+		return (pid + " - " +getTotalCPUTime());
 	}
 	
 	public int getRemainingTime()
@@ -48,7 +50,7 @@ class Process
 	}
 	public void servedOneClock() 
 	{ 
-		TimeLeft--;
+		leftTime--;
 	}
 	
 	public void finishedAt(int t) 
@@ -66,11 +68,10 @@ class Process
 		sequence[0] = true;
 		for( int i = 1; cpu < this.CPU_Bursts ||  io < this.IO_Bursts ; i++) 
 		{
-			if(i/2 || (io == this.IO_Bursts) )
+			if( (i%2==0) || (io == this.IO_Bursts) )
 			{
 				sequence[i] = true;
 				cpu++;
-			
 			}
 			else
 			{

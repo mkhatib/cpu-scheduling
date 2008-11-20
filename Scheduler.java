@@ -46,6 +46,7 @@ public class Scheduler extends Object{
 			while(readyQueue.getNumOfElements() >= MULTIPROGRAMMING_DEGREE)
 				spaceAvailable.await();
 			readyQueue.add(process); // add new process to first RRqueue
+			process.setArrivalTime(clock); 
 			processAvailable.signalAll();
 			//System.out.println("InsertProcess");
 			
